@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import userModel from '../models/userModel.js';
+import explorerModel from '../models/ explorerModel.js';
 import nodemailer from 'nodemailer';
 import {JWT_SECRET_KEY} from "../config.js"
 
@@ -22,13 +22,13 @@ export const register = async(req,res)=>{
            return res.json({success:false, message:"Missing Details"})
          }
          try {
-            const existingUser = await userModel.findOne({email})
+            const existingUser = await explorerModel.findOne({email})
             if (existingUser) {
                 return res.json({success:false,message:"User already exists"})
                 
             }
             const hashPassword = await bcrypt.hash(password,10)
-            const user = new userModel({name,email,password:hashPassword })
+            const user = new explorerModel({name,email,password:hashPassword })
             await user.save()
 
             const token =jwt.sign({id:user._id},JWT_SECRET_KEY,{expiresIn :'7d'})
@@ -62,7 +62,7 @@ export const login = async(req,res)=>{
    }
    try {
 
-      const user = await userModel.findOne({email})
+      const user = await explorerModel.findOne({email})
       if (!user) {
         return res.json({success:false,message:'Invalid Email'})
       }
@@ -93,7 +93,7 @@ export const sendVerifyOtp = async(req,res)=>{
 
    try {
       const {userId} = req.body;
-      const user = await userModel.findById(userId)
+      const user = await explorerModel.findById(userId)
       if (user.isAccountVerified) {
          return res.json({success:false,message:"Account Already verified"})
       }
@@ -124,7 +124,7 @@ export const verifyEmail = async(req,res)=>{
       return res.json({success:false , message:"Missing Details"})
    }
    try {
-      const user = await userModel.findById(userId)
+      const user = await explorerModel.findById(userId)
       if (!user) {
         return  res.json({success:false,message:'User not found'})
       }
@@ -159,7 +159,7 @@ export const sendResetOtp = async(req,res) =>{
       return res.json({success:false,message:"Email is required"})
    }
    try {
-      const user = await userModel.findOne({email})
+      const user = await explorerModel.findOne({email})
        if (!user) {
          return res.json({success:false,message:"User not found"})
        }
@@ -191,7 +191,7 @@ export const resetPassword = async(req,res)=>{
       return res.json({success:false,message:"Email,OTP,new password required"})
    }
    try {
-      const user = await userModel.findOne({email})
+      const user = await explorerModel.findOne({email})
        if (!user) {
          return res.json({success:false,message:"User not found"})
        }

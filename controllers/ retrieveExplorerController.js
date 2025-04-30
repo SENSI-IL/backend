@@ -1,10 +1,10 @@
-import userModel from "../models/userModel.js";
+import explorerModel from "../models/ explorerModel.js";
 
 export const  getUserData = async(req,res)=>{
 
     try {
        const {userId} = req.body;
-          const user = await userModel.findById(userId)
+          const user = await explorerModel.findById(userId)
        if (!user) {
           return res.json({success:false,message:"User not found"})
        } 
